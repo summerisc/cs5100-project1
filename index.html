@@ -5,25 +5,79 @@
 	<script src="https://d3js.org/d3.v4.min.js"></script>
 </head>
 <body>
-	<svg width="960" height="960" font-family="sans-serif" font-size="10" text-anchor="middle"></svg>
+	<svg width="960" height="960" font-family="sans-serif" font-size="10"> </svg>
 
 	 <script type="text/javascript">
 
-	 	var dataset;
-
-	 	d3.csv('testData.csv', parseLine, function(error, data) {
-	 		dataset = data[0];
-	 	});
-
 	 	function parseLine(line) {
-	 		return Number(line.duration);
+			// return Number(line.duration);
+			return line;
 	 	}
 
-	 	d3.select("body").selectAll("p")
-		    .data()
-		    .enter()
-		    .append("p")
-		    .text("New paragraph!");
+	 	fileName = 'testData.csv'
+	 	var dataset;
+	 	var stats, totalGross, totalMovies;
+
+	 	d3.csv(fileName, parseLine, function(error, data) {
+	 		dataset = data;
+
+	 		stats = {};
+	 		totalGross = 0;
+	 		totalMovies = dataset.length;
+
+	 		dataset.forEach(function(row) {
+
+	 			if (row.gross > 0) {
+
+	 			var genres = row.genres.split('|')
+	 			genres.forEach(function(genre) {
+	 				if (stats[genre]) {
+	 					stats[genre]['count'] += 1;
+	 					stats[genre]['gross'] += Number(row.gross); 
+	 				} else {
+	 					stats[genre] = {'count':1, 'gross': Number(row.gross)}
+	 				}
+	 				totalGross += Number(row.gross);
+	 			});
+	 			}
+
+	 		});
+
+	 		var scale = d3.scaleLinear()
+	 		.domain([0,100])
+	 		.range([0,200]);
+
+	 		var svg = d3.selectAll('svg')
+
+	 		Object.keys(stats).forEach(function(genre) {
+	 			d3.selectAll('svg')
+	 			.append('circle')
+	 			.attr('r', scale(stats[genre]['count'] / totalMovies * 100))
+	 			.attr('cx', 50)
+	 			.attr('cy', 50)
+	    		.style("fill", "blue")
+	 		});
+
+
+
+	 			Object.keys(stats).forEach(function(genre) {
+	 			d3.selectAll('svg')
+	 			.append('circle')
+	 			.attr('r', scale(stats[genre]['gross'] / totalGross * 100))
+	 			.attr('cx', 100)
+	 			.attr('cy', 100)
+	    		.style("fill", "blue")
+	 		});
+		    // .append("circle")
+	    	// .attr('r',)
+	    	// .attr('cx', 50)
+	    	// .attr('cy', 50)
+	    	// .style("fill", "blue")
+	 	});
+
+	 	
+
+	 	
 	 	// var svg = d3.selectAll("svg");
 	 	// var testData;
 
