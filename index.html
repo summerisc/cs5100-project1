@@ -3,9 +3,18 @@
 <head>
 	<title></title>
 	<script src="https://d3js.org/d3.v4.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
+<style>
+	svg { border: solid black 1px; }
+</style>
 <body>
-	<svg width="960" height="960" font-family="sans-serif" font-size="10"> </svg>
+	<svg width="1024" height="1024" font-family="sans-serif" font-size="10">
+		<g id="Quality50s" transform="translate(-370, -370)"></g>
+		<!-- <g id="Popularity50s" transform="translate(-370, -200)"></g> -->
+	</svg>
+
+	<svg id="Popularity50s" width="1024" height="1024" font-family="sans-serif" font-size="10"></svg>
 
 	 <script type="text/javascript">
 
@@ -14,9 +23,12 @@
 			return line;
 	 	}
 
-	 	fileName = 'testData.csv'
+	 	fileName = '1970.csv'
 	 	var dataset;
 	 	var stats, totalGross, totalMovies;
+	 	var simulation;
+	 	var nodes;
+	 	var colors;
 
 	 	d3.csv(fileName, parseLine, function(error, data) {
 	 		dataset = data;
@@ -45,29 +57,99 @@
 
 	 		var scale = d3.scaleLinear()
 	 		.domain([0,100])
-	 		.range([0,200]);
+	 		.range([0,100]);
 
-	 		var svg = d3.selectAll('svg')
+	 		nodes = [];
 
 	 		Object.keys(stats).forEach(function(genre) {
-	 			d3.selectAll('svg')
-	 			.append('circle')
-	 			.attr('r', scale(stats[genre]['count'] / totalMovies * 100))
-	 			.attr('cx', 50)
-	 			.attr('cy', 50)
-	    		.style("fill", "blue")
+	 			nodes.push({'genre':genre, 'count': stats[genre]['count'], 'gross': stats[genre]['gross']})
 	 		});
 
+	 		// var svg = d3.selectAll('svg')
+
+	 		var simulation = d3.forceSimulation()
+    		.force("x", d3.forceX(960 / 2).strength(0.05))
+    		.force("y", d3.forceY(960 / 2).strength(0.05))
+    		.force("collide", d3.forceCollide(function(d) {
+      			return scale(d.count/totalMovies*100)+2;
+   			 }))
+
+    		colors = {
+    			'Crime': 'black',
+    			'Drama': 'blue',
+    			'Musical': 'purple',
+    			'Romance': 'pink',
+    			'Sci-Fi': 'yellow',
+    			'Action': 'green'
+    		}
+
+	 		var circles = d3.select('#Quality50s').selectAll('circle')
+	 			.data(nodes)
+	 			.enter()
+	 			.append("circle")
+	 			.attr("r", d => {return scale(d.count/totalMovies*100)})
+	 			.style("fill", d => { return colors[d.genre] })
+
+	 			simulation.nodes(nodes)
+	 			.on('tick', ticked)
+
+	 			function ticked(){
+	 				circles
+	 				.attr("cx",function(d){
+	 					return d.x
+	 				})
+	 				.attr("cy",function(d){
+	 					return d.y
+	 				})
+	 			}
+
+	 			var simulation2 = d3.forceSimulation()
+	    		.force("x", d3.forceX(960 / 2).strength(0.05))
+	    		.force("y", d3.forceY(960 / 2).strength(0.05))
+	    		.force("collide", d3.forceCollide(function(d) {
+	      			return scale(d.gross/totalGross*100)+2;
+	   			 }))
+
+	 			var circles1 = d3.select('#Popularity50s').selectAll('circle')
+	 			.data(nodes)
+	 			.enter()
+	 			.append("circle")
+	 			.attr("r", d => {return scale(d.gross/totalGross*100)})
+	 			.style("fill", d => { return colors[d.genre] })
+
+	 			simulation2.nodes(nodes)
+	 			.on('tick', ticked)
+
+	 			// $('svg').css('display', 'inline');
+	 			// .append('circle')
+	 			// .attr('r', scale(stats[genre]['count'] / totalMovies * 100))
+	 			// .attr('cx', 50)
+	 			// .attr('cy', 50)
+	    // 		.style("fill", "blue")
 
 
-	 			Object.keys(stats).forEach(function(genre) {
-	 			d3.selectAll('svg')
-	 			.append('circle')
-	 			.attr('r', scale(stats[genre]['gross'] / totalGross * 100))
-	 			.attr('cx', 100)
-	 			.attr('cy', 100)
-	    		.style("fill", "blue")
-	 		});
+
+
+	 		// Create movie quailty
+	 		// Object.keys(stats).forEach(function(genre) {
+	 		// 	d3.selectAll('svg')
+	 		// 	.append('circle')
+	 		// 	.attr('r', scale(stats[genre]['count'] / totalMovies * 100))
+	 		// 	.attr('cx', 50)
+	 		// 	.attr('cy', 50)
+	   //  		.style("fill", "blue")
+	 		// });
+
+
+	 			// Create movie popularity
+	 		// 	Object.keys(stats).forEach(function(genre) {
+	 		// 	d3.selectAll('svg')
+	 		// 	.append('circle')
+	 		// 	.attr('r', scale(stats[genre]['gross'] / totalGross * 100))
+	 		// 	.attr('cx', 100)
+	 		// 	.attr('cy', 100)
+	   //  		.style("fill", "blue")
+	 		// });
 		    // .append("circle")
 	    	// .attr('r',)
 	    	// .attr('cx', 50)
@@ -145,7 +227,6 @@
   	// 	.attr("cx", 50)
   	// 	.attr("cy", 50)
   	// 	.style("fill", "red");
-
 	 </script>
 </body>
 </html>
