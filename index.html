@@ -9,33 +9,199 @@
 	svg { border: solid black 1px; }
 </style>
 <body>
-	<svg width="1024" height="1024" font-family="sans-serif" font-size="10">
-		<g id="Quality50s" transform="translate(-370, -370)"></g>
-		<!-- <g id="Popularity50s" transform="translate(-370, -200)"></g> -->
+	<svg width="1000" height="2300" font-family="sans-serif" font-size="10">
+		<g id="charts" transform="translate(100, 0)">
+			<g id="Quality50s" transform="translate(-370, -370)"></g>
+			<g id="Popularity50s" transform="translate(-100, -370)"></g>
+
+			<g id="Quality60s" transform="translate(-370,-40)"></g>
+			<g id="Popularity60s" transform="translate(-100,-40)"></g>
+
+			<g id="Quality70s" transform="translate(-370,290)"></g>
+			<g id="Popularity70s" transform="translate(-100,290)"></g>
+
+			<g id="Quality80s" transform="translate(-370,620)"></g>
+			<g id="Popularity80s" transform="translate(-100,620)"></g>
+
+			<g id="Quality90s" transform="translate(-370,950)"></g>
+			<g id="Popularity90s" transform="translate(-100,950)"></g>
+
+			<g id="Quality00s" transform="translate(-370,1280)"></g>
+			<g id="Popularity00s" transform="translate(-100,1280)"></g>
+
+			<g id="Quality10s" transform="translate(-370,1610)"></g>
+			<g id="Popularity10s" transform="translate(-100,1610)"></g>
+		</g>
+
+		<g id="legend" transform="translate(700,100)"></g>
+
 	</svg>
-
-	<svg id="Popularity50s" width="1024" height="1024" font-family="sans-serif" font-size="10"></svg>
-
 	 <script type="text/javascript">
 
-	 	function parseLine(line) {
-			// return Number(line.duration);
-			return line;
-	 	}
-
-	 	fileName = '1970.csv'
 	 	var dataset;
-	 	var stats, totalGross, totalMovies;
-	 	var simulation;
+	 	var stats, totalGross, totalCount;
 	 	var nodes;
-	 	var colors;
+	 	const width = 1024;
+	 	const height = 1024;
 
-	 	d3.csv(fileName, parseLine, function(error, data) {
+	 	var scale = d3.scaleLinear()
+	 		.domain([0,100])
+	 		.range([0,200]);
+
+	 	var colors = {
+    			'Crime': '82789b',
+    			'Noir': '342867',
+    			'Mystery':'3b324f',
+    			'Drama': '741f1c',
+    			'Musical': '497e73',
+    			'Music': '50946c',
+    			'Romance': 'b03846',
+    			'Sci-Fi': '8fd07b',
+    			'Action': '376779',
+    			'Horror':'2f1536',
+    			'Thriller':'2d4b7c',
+    			'Sport':'73904f',
+    			'Fantasy':'dce281',
+    			'Animation':'f2e5bb',
+    			'Family':'e70184',
+    			'Comedy':'db9a83',
+    			'Documentary':'a76955',
+    			'War':'4d2737',
+    			'Adventure':'183f37',
+    			'Western':'5c7678',
+    			'Biography':'b25965',
+    			'History':'c8624b'
+
+    		}
+
+
+		//legend
+
+	 	// var colorTitles = [];
+	 	// var colorValues = [];
+	 	// Object.keys(colors).forEach(function(color) {
+	 	// 	colorTitles.push(color);
+	 	// 	colorValues.push('#' + colors[color] + '');
+	 	// });
+
+
+	 	Object.keys(colors).forEach(function(color, index) {
+	 	d3.select('#legend')
+	 	.append('circle')
+	 	.attr('cx', 0)
+	 	.attr('cy', index * 10)
+	 	.attr('r', 3)
+	 	.style('fill', colors[color])
+
+	 	d3.select('#legend')
+	 	.append('text')
+	 	.text(color)
+	 	.attr('x', 8)
+	 	.attr('y', index * 10 + 4)
+	 	});
+	 	
+	 	/*titles*/
+	 	d3.select("svg").append('text')
+	 	.attr("x", 130)
+        .attr("y", 40)
+        .attr('text-anchor', 'middle')
+        .attr('alignment-baseline', 'central')
+        // .style('font-family','')
+        .text("Ratings")
+
+        d3.select("svg").append('text')
+	 	.attr("x", 400)
+        .attr("y", 40)
+        .attr('text-anchor', 'middle')
+        .text("Box Office")
+
+
+
+        /*year*/
+         d3.select("svg").append('text')
+	 	.attr("x", 60)
+        .attr("y", 150)
+        .attr('text-anchor', 'middle')
+        .attr('alignment-baseline', 'central')
+        // .style('font-family','')
+        .text("1950")
+
+
+   		d3.select("svg").append('text')
+	 	.attr("x", 60)
+        .attr("y", 480)
+        .attr('text-anchor', 'middle')
+        .attr('alignment-baseline', 'central')
+        // .style('font-family','')
+        .text("1960")
+
+
+   		d3.select("svg").append('text')
+	 	.attr("x", 60)
+        .attr("y", 810)
+        .attr('text-anchor', 'middle')
+        .attr('alignment-baseline', 'central')
+        // .style('font-family','')
+        .text("1970")
+
+
+   		d3.select("svg").append('text')
+	 	.attr("x", 60)
+        .attr("y", 1140)
+        .attr('text-anchor', 'middle')
+        .attr('alignment-baseline', 'central')
+        // .style('font-family','')
+        .text("1980")
+
+        d3.select("svg").append('text')
+	 	.attr("x", 60)
+        .attr("y", 1470)
+        .attr('text-anchor', 'middle')
+        .attr('alignment-baseline', 'central')
+        // .style('font-family','')
+        .text("1990")
+
+        d3.select("svg").append('text')
+	 	.attr("x", 60)
+        .attr("y", 1800)
+        .attr('text-anchor', 'middle')
+        .attr('alignment-baseline', 'central')
+        // .style('font-family','')
+        .text("2000")
+
+        d3.select("svg").append('text')
+	 	.attr("x", 60)
+        .attr("y", 2130)
+        .attr('text-anchor', 'middle')
+        .attr('alignment-baseline', 'central')
+        // .style('font-family','')
+        .text("2010")
+
+		/**********/
+	 	/* legend */
+	 	/**********/
+
+	 	// var log = d3.scaleLog()
+	 	// .domain(colorTitles)
+	 	// .range(colorValues);
+
+	 	// var svg = d3.select("svg");
+
+	 	// svg.append("g")
+	 	// .attr("class","legendLog")
+
+
+
+	 	/**********/
+	 	/* 1970's */
+	 	/**********/
+
+	 	d3.csv('1970.csv', function(error, data) {
 	 		dataset = data;
 
 	 		stats = {};
 	 		totalGross = 0;
-	 		totalMovies = dataset.length;
+	 		totalCount = 0;
 
 	 		dataset.forEach(function(row) {
 
@@ -50,16 +216,14 @@
 	 					stats[genre] = {'count':1, 'gross': Number(row.gross)}
 	 				}
 	 				totalGross += Number(row.gross);
+	 				totalCount += 1;
 	 			});
 	 			}
 
 	 		});
 
-	 		var scale = d3.scaleLinear()
-	 		.domain([0,100])
-	 		.range([0,100]);
-
 	 		nodes = [];
+	 		nodes1 = [];
 
 	 		Object.keys(stats).forEach(function(genre) {
 	 			nodes.push({'genre':genre, 'count': stats[genre]['count'], 'gross': stats[genre]['gross']})
@@ -67,30 +231,21 @@
 
 	 		// var svg = d3.selectAll('svg')
 
-	 		var simulation = d3.forceSimulation()
-    		.force("x", d3.forceX(960 / 2).strength(0.05))
-    		.force("y", d3.forceY(960 / 2).strength(0.05))
+	 		var topRatedSimulation = d3.forceSimulation()
+    		.force("x", d3.forceX(width / 2).strength(0.05))
+    		.force("y", d3.forceY(height / 2).strength(0.05))
     		.force("collide", d3.forceCollide(function(d) {
-      			return scale(d.count/totalMovies*100)+2;
+      			return scale(d.count/totalCount*100)+2;
    			 }))
 
-    		colors = {
-    			'Crime': 'black',
-    			'Drama': 'blue',
-    			'Musical': 'purple',
-    			'Romance': 'pink',
-    			'Sci-Fi': 'yellow',
-    			'Action': 'green'
-    		}
-
-	 		var circles = d3.select('#Quality50s').selectAll('circle')
+	 		var circles = d3.select('#Quality70s').selectAll('circle')
 	 			.data(nodes)
 	 			.enter()
 	 			.append("circle")
-	 			.attr("r", d => {return scale(d.count/totalMovies*100)})
+	 			.attr("r", d => {return scale(d.count/totalCount*100)})
 	 			.style("fill", d => { return colors[d.genre] })
 
-	 			simulation.nodes(nodes)
+	 			topRatedSimulation.nodes(nodes)
 	 			.on('tick', ticked)
 
 	 			function ticked(){
@@ -103,9 +258,303 @@
 	 				})
 	 			}
 
-	 			var simulation2 = d3.forceSimulation()
-	    		.force("x", d3.forceX(960 / 2).strength(0.05))
-	    		.force("y", d3.forceY(960 / 2).strength(0.05))
+	 			function ticked1(){
+	 				circles1
+	 				.attr("cx",function(d){
+	 					return d.x
+	 				})
+	 				.attr("cy",function(d){
+	 					return d.y
+	 				})
+	 			}
+
+	 			var boxOfficeSimulation = d3.forceSimulation()
+	    		.force("x", d3.forceX(width / 2).strength(0.05))
+	    		.force("y", d3.forceY(height / 2).strength(0.05))
+	    		.force("collide", d3.forceCollide(function(d) {
+	      			return scale(d.gross/totalGross*100)+2;
+	   			 }))
+
+	 			var circles1 = d3.select('#Popularity70s').selectAll('circle')
+	 			.data(nodes)
+	 			.enter()
+	 			.append("circle")
+	 			.attr("r", d => {return scale(d.gross/totalGross*100)})
+	 			.style("fill", d => { return colors[d.genre] })
+
+	 			boxOfficeSimulation.nodes(nodes)
+	 			.on('tick', ticked1)
+	 	});
+
+		/**********/
+	 	/* 1980's */
+	 	/**********/
+
+	 	d3.csv('1980.csv', function(error, data) {
+	 		dataset = data;
+
+	 		stats = {};
+	 		totalGross = 0;
+	 		totalCount = 0;
+
+	 		dataset.forEach(function(row) {
+
+	 			if (row.gross > 0) {
+
+	 			var genres = row.genres.split('|')
+	 			genres.forEach(function(genre) {
+	 				if (stats[genre]) {
+	 					stats[genre]['count'] += 1;
+	 					stats[genre]['gross'] += Number(row.gross); 
+	 				} else {
+	 					stats[genre] = {'count':1, 'gross': Number(row.gross)}
+	 				}
+	 				totalGross += Number(row.gross);
+	 				totalCount += 1;
+	 			});
+	 			}
+
+	 		});
+
+	 		nodes = [];
+	 		nodes1 = [];
+
+	 		Object.keys(stats).forEach(function(genre) {
+	 			nodes.push({'genre':genre, 'count': stats[genre]['count'], 'gross': stats[genre]['gross']})
+	 		});
+
+	 		// var svg = d3.selectAll('svg')
+
+	 		var topRatedSimulation = d3.forceSimulation()
+    		.force("x", d3.forceX(width / 2).strength(0.05))
+    		.force("y", d3.forceY(height / 2).strength(0.05))
+    		.force("collide", d3.forceCollide(function(d) {
+      			return scale(d.count/totalCount*100)+2;
+   			 }))
+
+	 		var circles = d3.select('#Quality80s').selectAll('circle')
+	 			.data(nodes)
+	 			.enter()
+	 			.append("circle")
+	 			.attr("r", d => {return scale(d.count/totalCount*100)})
+	 			.style("fill", d => { return colors[d.genre] })
+
+	 			topRatedSimulation.nodes(nodes)
+	 			.on('tick', ticked)
+
+	 			function ticked(){
+	 				circles
+	 				.attr("cx",function(d){
+	 					return d.x
+	 				})
+	 				.attr("cy",function(d){
+	 					return d.y
+	 				})
+	 			}
+
+	 			function ticked1(){
+	 				circles1
+	 				.attr("cx",function(d){
+	 					return d.x
+	 				})
+	 				.attr("cy",function(d){
+	 					return d.y
+	 				})
+	 			}
+
+	 			var boxOfficeSimulation = d3.forceSimulation()
+	    		.force("x", d3.forceX(width / 2).strength(0.05))
+	    		.force("y", d3.forceY(height / 2).strength(0.05))
+	    		.force("collide", d3.forceCollide(function(d) {
+	      			return scale(d.gross/totalGross*100)+2;
+	   			 }))
+
+	 			var circles1 = d3.select('#Popularity80s').selectAll('circle')
+	 			.data(nodes)
+	 			.enter()
+	 			.append("circle")
+	 			.attr("r", d => {return scale(d.gross/totalGross*100)})
+	 			.style("fill", d => { return colors[d.genre] })
+
+	 			boxOfficeSimulation.nodes(nodes)
+	 			.on('tick', ticked1)
+	 	});	 	
+
+
+		/**********/
+	 	/* 1990's */
+	 	/**********/
+
+	 	d3.csv('1990.csv', function(error, data) {
+	 		dataset = data;
+
+	 		stats = {};
+	 		totalGross = 0;
+	 		totalCount = 0;
+
+	 		dataset.forEach(function(row) {
+
+	 			if (row.gross > 0) {
+
+	 			var genres = row.genres.split('|')
+	 			genres.forEach(function(genre) {
+	 				if (stats[genre]) {
+	 					stats[genre]['count'] += 1;
+	 					stats[genre]['gross'] += Number(row.gross); 
+	 				} else {
+	 					stats[genre] = {'count':1, 'gross': Number(row.gross)}
+	 				}
+	 				totalGross += Number(row.gross);
+	 				totalCount += 1;
+	 			});
+	 			}
+
+	 		});
+
+	 		nodes = [];
+	 		nodes1 = [];
+
+	 		Object.keys(stats).forEach(function(genre) {
+	 			nodes.push({'genre':genre, 'count': stats[genre]['count'], 'gross': stats[genre]['gross']})
+	 		});
+
+	 		// var svg = d3.selectAll('svg')
+
+	 		var topRatedSimulation = d3.forceSimulation()
+    		.force("x", d3.forceX(width / 2).strength(0.05))
+    		.force("y", d3.forceY(height / 2).strength(0.05))
+    		.force("collide", d3.forceCollide(function(d) {
+      			return scale(d.count/totalCount*100)+2;
+   			 }))
+
+	 		var circles = d3.select('#Quality90s').selectAll('circle')
+	 			.data(nodes)
+	 			.enter()
+	 			.append("circle")
+	 			.attr("r", d => {return scale(d.count/totalCount*100)})
+	 			.style("fill", d => { return colors[d.genre] })
+
+	 			topRatedSimulation.nodes(nodes)
+	 			.on('tick', ticked)
+
+	 			function ticked(){
+	 				circles
+	 				.attr("cx",function(d){
+	 					return d.x
+	 				})
+	 				.attr("cy",function(d){
+	 					return d.y
+	 				})
+	 			}
+
+	 			function ticked1(){
+	 				circles1
+	 				.attr("cx",function(d){
+	 					return d.x
+	 				})
+	 				.attr("cy",function(d){
+	 					return d.y
+	 				})
+	 			}
+
+	 			var boxOfficeSimulation = d3.forceSimulation()
+	    		.force("x", d3.forceX(width / 2).strength(0.05))
+	    		.force("y", d3.forceY(height / 2).strength(0.05))
+	    		.force("collide", d3.forceCollide(function(d) {
+	      			return scale(d.gross/totalGross*100)+2;
+	   			 }))
+
+	 			var circles1 = d3.select('#Popularity90s').selectAll('circle')
+	 			.data(nodes)
+	 			.enter()
+	 			.append("circle")
+	 			.attr("r", d => {return scale(d.gross/totalGross*100)})
+	 			.style("fill", d => { return colors[d.genre] })
+
+	 			boxOfficeSimulation.nodes(nodes)
+	 			.on('tick', ticked1)
+	 	});	 	
+
+
+		/**********/
+	 	/* 1950's */
+	 	/**********/
+
+	 	d3.csv('1950.csv', function(error, data) {
+	 		dataset = data;
+
+	 		stats = {};
+	 		totalGross = 0;
+	 		totalCount = 0;
+
+	 		dataset.forEach(function(row) {
+
+	 			if (row.gross > 0) {
+
+	 			var genres = row.genres.split('|')
+	 			genres.forEach(function(genre) {
+	 				if (stats[genre]) {
+	 					stats[genre]['count'] += 1;
+	 					stats[genre]['gross'] += Number(row.gross); 
+	 				} else {
+	 					stats[genre] = {'count':1, 'gross': Number(row.gross)}
+	 				}
+	 				totalGross += Number(row.gross);
+	 				totalCount += 1;
+	 			});
+	 			}
+
+	 		});
+
+	 		nodes = [];
+	 		nodes1 = [];
+
+	 		Object.keys(stats).forEach(function(genre) {
+	 			nodes.push({'genre':genre, 'count': stats[genre]['count'], 'gross': stats[genre]['gross']})
+	 		});
+
+	 		// var svg = d3.selectAll('svg')
+
+	 		var topRatedSimulation = d3.forceSimulation()
+    		.force("x", d3.forceX(width / 2).strength(0.05))
+    		.force("y", d3.forceY(height / 2).strength(0.05))
+    		.force("collide", d3.forceCollide(function(d) {
+      			return scale(d.count/totalCount*100)+2;
+   			 }))
+
+	 		var circles = d3.select('#Quality50s').selectAll('circle')
+	 			.data(nodes)
+	 			.enter()
+	 			.append("circle")
+	 			.attr("r", d => {return scale(d.count/totalCount*100)})
+	 			.style("fill", d => { return colors[d.genre] })
+
+	 			topRatedSimulation.nodes(nodes)
+	 			.on('tick', ticked)
+
+	 			function ticked(){
+	 				circles
+	 				.attr("cx",function(d){
+	 					return d.x
+	 				})
+	 				.attr("cy",function(d){
+	 					return d.y
+	 				})
+	 			}
+
+	 			function ticked1(){
+	 				circles1
+	 				.attr("cx",function(d){
+	 					return d.x
+	 				})
+	 				.attr("cy",function(d){
+	 					return d.y
+	 				})
+	 			}
+
+	 			var boxOfficeSimulation = d3.forceSimulation()
+	    		.force("x", d3.forceX(width / 2).strength(0.05))
+	    		.force("y", d3.forceY(height / 2).strength(0.05))
 	    		.force("collide", d3.forceCollide(function(d) {
 	      			return scale(d.gross/totalGross*100)+2;
 	   			 }))
@@ -117,116 +566,295 @@
 	 			.attr("r", d => {return scale(d.gross/totalGross*100)})
 	 			.style("fill", d => { return colors[d.genre] })
 
-	 			simulation2.nodes(nodes)
+	 			boxOfficeSimulation.nodes(nodes)
+	 			.on('tick', ticked1)
+	 	});	 
+
+
+		/**********/
+	 	/* 2000's */
+	 	/**********/
+
+	 	d3.csv('2000.csv', function(error, data) {
+	 		dataset = data;
+
+	 		stats = {};
+	 		totalGross = 0;
+	 		totalCount = 0;
+
+	 		dataset.forEach(function(row) {
+
+	 			if (row.gross > 0) {
+
+	 			var genres = row.genres.split('|')
+	 			genres.forEach(function(genre) {
+	 				if (stats[genre]) {
+	 					stats[genre]['count'] += 1;
+	 					stats[genre]['gross'] += Number(row.gross); 
+	 				} else {
+	 					stats[genre] = {'count':1, 'gross': Number(row.gross)}
+	 				}
+	 				totalGross += Number(row.gross);
+	 				totalCount += 1;
+	 			});
+	 			}
+
+	 		});
+
+	 		nodes = [];
+	 		nodes1 = [];
+
+	 		Object.keys(stats).forEach(function(genre) {
+	 			nodes.push({'genre':genre, 'count': stats[genre]['count'], 'gross': stats[genre]['gross']})
+	 		});
+
+	 		// var svg = d3.selectAll('svg')
+
+	 		var topRatedSimulation = d3.forceSimulation()
+    		.force("x", d3.forceX(width / 2).strength(0.05))
+    		.force("y", d3.forceY(height / 2).strength(0.05))
+    		.force("collide", d3.forceCollide(function(d) {
+      			return scale(d.count/totalCount*100)+2;
+   			 }))
+
+	 		var circles = d3.select('#Quality00s').selectAll('circle')
+	 			.data(nodes)
+	 			.enter()
+	 			.append("circle")
+	 			.attr("r", d => {return scale(d.count/totalCount*100)})
+	 			.style("fill", d => { return colors[d.genre] })
+
+	 			topRatedSimulation.nodes(nodes)
 	 			.on('tick', ticked)
 
-	 			// $('svg').css('display', 'inline');
-	 			// .append('circle')
-	 			// .attr('r', scale(stats[genre]['count'] / totalMovies * 100))
-	 			// .attr('cx', 50)
-	 			// .attr('cy', 50)
-	    // 		.style("fill", "blue")
+	 			function ticked(){
+	 				circles
+	 				.attr("cx",function(d){
+	 					return d.x
+	 				})
+	 				.attr("cy",function(d){
+	 					return d.y
+	 				})
+	 			}
+
+	 			function ticked1(){
+	 				circles1
+	 				.attr("cx",function(d){
+	 					return d.x
+	 				})
+	 				.attr("cy",function(d){
+	 					return d.y
+	 				})
+	 			}
+
+	 			var boxOfficeSimulation = d3.forceSimulation()
+	    		.force("x", d3.forceX(width / 2).strength(0.05))
+	    		.force("y", d3.forceY(height / 2).strength(0.05))
+	    		.force("collide", d3.forceCollide(function(d) {
+	      			return scale(d.gross/totalGross*100)+2;
+	   			 }))
+
+	 			var circles1 = d3.select('#Popularity00s').selectAll('circle')
+	 			.data(nodes)
+	 			.enter()
+	 			.append("circle")
+	 			.attr("r", d => {return scale(d.gross/totalGross*100)})
+	 			.style("fill", d => { return colors[d.genre] })
+
+	 			boxOfficeSimulation.nodes(nodes)
+	 			.on('tick', ticked1)
+	 	});	
 
 
+		/**********/
+	 	/* 2010's */
+	 	/**********/
+
+	 	d3.csv('2010.csv', function(error, data) {
+	 		dataset = data;
+
+	 		stats = {};
+	 		totalGross = 0;
+	 		totalCount = 0;
+
+	 		dataset.forEach(function(row) {
+
+	 			if (row.gross > 0) {
+
+	 			var genres = row.genres.split('|')
+	 			genres.forEach(function(genre) {
+	 				if (stats[genre]) {
+	 					stats[genre]['count'] += 1;
+	 					stats[genre]['gross'] += Number(row.gross); 
+	 				} else {
+	 					stats[genre] = {'count':1, 'gross': Number(row.gross)}
+	 				}
+	 				totalGross += Number(row.gross);
+	 				totalCount += 1;
+	 			});
+	 			}
+
+	 		});
+
+	 		nodes = [];
+	 		nodes1 = [];
+
+	 		Object.keys(stats).forEach(function(genre) {
+	 			nodes.push({'genre':genre, 'count': stats[genre]['count'], 'gross': stats[genre]['gross']})
+	 		});
+
+	 		// var svg = d3.selectAll('svg')
+
+	 		var topRatedSimulation = d3.forceSimulation()
+    		.force("x", d3.forceX(width / 2).strength(0.05))
+    		.force("y", d3.forceY(height / 2).strength(0.05))
+    		.force("collide", d3.forceCollide(function(d) {
+      			return scale(d.count/totalCount*100)+2;
+   			 }))
+
+	 		var circles = d3.select('#Quality10s').selectAll('circle')
+	 			.data(nodes)
+	 			.enter()
+	 			.append("circle")
+	 			.attr("r", d => {return scale(d.count/totalCount*100)})
+	 			.style("fill", d => { return colors[d.genre] })
+
+	 			topRatedSimulation.nodes(nodes)
+	 			.on('tick', ticked)
+
+	 			function ticked(){
+	 				circles
+	 				.attr("cx",function(d){
+	 					return d.x
+	 				})
+	 				.attr("cy",function(d){
+	 					return d.y
+	 				})
+	 			}
+
+	 			function ticked1(){
+	 				circles1
+	 				.attr("cx",function(d){
+	 					return d.x
+	 				})
+	 				.attr("cy",function(d){
+	 					return d.y
+	 				})
+	 			}
+
+	 			var boxOfficeSimulation = d3.forceSimulation()
+	    		.force("x", d3.forceX(width / 2).strength(0.05))
+	    		.force("y", d3.forceY(height / 2).strength(0.05))
+	    		.force("collide", d3.forceCollide(function(d) {
+	      			return scale(d.gross/totalGross*100)+2;
+	   			 }))
+
+	 			var circles1 = d3.select('#Popularity10s').selectAll('circle')
+	 			.data(nodes)
+	 			.enter()
+	 			.append("circle")
+	 			.attr("r", d => {return scale(d.gross/totalGross*100)})
+	 			.style("fill", d => { return colors[d.genre] })
+
+	 			boxOfficeSimulation.nodes(nodes)
+	 			.on('tick', ticked1)
+	 	});		
 
 
-	 		// Create movie quailty
-	 		// Object.keys(stats).forEach(function(genre) {
-	 		// 	d3.selectAll('svg')
-	 		// 	.append('circle')
-	 		// 	.attr('r', scale(stats[genre]['count'] / totalMovies * 100))
-	 		// 	.attr('cx', 50)
-	 		// 	.attr('cy', 50)
-	   //  		.style("fill", "blue")
-	 		// });
+		/**********/
+	 	/* 1960's */
+	 	/**********/
 
+	 	d3.csv('1960.csv', function(error, data) {
+	 		dataset = data;
 
-	 			// Create movie popularity
-	 		// 	Object.keys(stats).forEach(function(genre) {
-	 		// 	d3.selectAll('svg')
-	 		// 	.append('circle')
-	 		// 	.attr('r', scale(stats[genre]['gross'] / totalGross * 100))
-	 		// 	.attr('cx', 100)
-	 		// 	.attr('cy', 100)
-	   //  		.style("fill", "blue")
-	 		// });
-		    // .append("circle")
-	    	// .attr('r',)
-	    	// .attr('cx', 50)
-	    	// .attr('cy', 50)
-	    	// .style("fill", "blue")
+	 		stats = {};
+	 		totalGross = 0;
+	 		totalCount = 0;
+
+	 		dataset.forEach(function(row) {
+
+	 			if (row.gross > 0) {
+
+	 			var genres = row.genres.split('|')
+	 			genres.forEach(function(genre) {
+	 				if (stats[genre]) {
+	 					stats[genre]['count'] += 1;
+	 					stats[genre]['gross'] += Number(row.gross); 
+	 				} else {
+	 					stats[genre] = {'count':1, 'gross': Number(row.gross)}
+	 				}
+	 				totalGross += Number(row.gross);
+	 				totalCount += 1;
+	 			});
+	 			}
+
+	 		});
+
+	 		nodes = [];
+	 		nodes1 = [];
+
+	 		Object.keys(stats).forEach(function(genre) {
+	 			nodes.push({'genre':genre, 'count': stats[genre]['count'], 'gross': stats[genre]['gross']})
+	 		});
+
+	 		// var svg = d3.selectAll('svg')
+
+	 		var topRatedSimulation = d3.forceSimulation()
+    		.force("x", d3.forceX(width / 2).strength(0.05))
+    		.force("y", d3.forceY(height / 2).strength(0.05))
+    		.force("collide", d3.forceCollide(function(d) {
+      			return scale(d.count/totalCount*100)+2;
+   			 }))
+
+	 		var circles = d3.select('#Quality60s').selectAll('circle')
+	 			.data(nodes)
+	 			.enter()
+	 			.append("circle")
+	 			.attr("r", d => {return scale(d.count/totalCount*100)})
+	 			.style("fill", d => { return colors[d.genre] })
+
+	 			topRatedSimulation.nodes(nodes)
+	 			.on('tick', ticked)
+
+	 			function ticked(){
+	 				circles
+	 				.attr("cx",function(d){
+	 					return d.x
+	 				})
+	 				.attr("cy",function(d){
+	 					return d.y
+	 				})
+	 			}
+
+	 			function ticked1(){
+	 				circles1
+	 				.attr("cx",function(d){
+	 					return d.x
+	 				})
+	 				.attr("cy",function(d){
+	 					return d.y
+	 				})
+	 			}
+
+	 			var boxOfficeSimulation = d3.forceSimulation()
+	    		.force("x", d3.forceX(width / 2).strength(0.05))
+	    		.force("y", d3.forceY(height / 2).strength(0.05))
+	    		.force("collide", d3.forceCollide(function(d) {
+	      			return scale(d.gross/totalGross*100)+2;
+	   			 }))
+
+	 			var circles1 = d3.select('#Popularity60s').selectAll('circle')
+	 			.data(nodes)
+	 			.enter()
+	 			.append("circle")
+	 			.attr("r", d => {return scale(d.gross/totalGross*100)})
+	 			.style("fill", d => { return colors[d.genre] })
+
+	 			boxOfficeSimulation.nodes(nodes)
+	 			.on('tick', ticked1)
 	 	});
-
 	 	
-
-	 	
-	 	// var svg = d3.selectAll("svg");
-	 	// var testData;
-
-	 	// d3.selectAll('p')
-	 	// .data(testData)
-	 	// .enter()
-	 	// .append('p')
-	 	// .text("New paragraph!");
-	 	// .attr('r', this)
-
-
-	 	
-
-
-	 	// svg.append("circle")
-	 	// .attr("r", 10)
-  	// 	.attr("cx", 50)
-  	// 	.attr("cy", 50)
-  	// 	.style("fill", "red");
-
-
-
-	 	// svg.append("circle")
-	 	// .attr("r", 10)
-  	// 	.attr("cx", 50)
-  	// 	.attr("cy", 50)
-  	// 	.style("fill", "red");
-
-
-
-	 	// svg.append("circle")
-	 	// .attr("r", 10)
-  	// 	.attr("cx", 50)
-  	// 	.attr("cy", 50)
-  	// 	.style("fill", "red");
-
-
-
-	 	// svg.append("circle")
-	 	// .attr("r", 10)
-  	// 	.attr("cx", 50)
-  	// 	.attr("cy", 50)
-  	// 	.style("fill", "red");
-
-
-
-	 	// svg.append("circle")
-	 	// .attr("r", 10)
-  	// 	.attr("cx", 50)
-  	// 	.attr("cy", 50)
-  	// 	.style("fill", "red");
-
-
-
-	 	// svg.append("circle")
-	 	// .attr("r", 10)
-  	// 	.attr("cx", 50)
-  	// 	.attr("cy", 50)
-  	// 	.style("fill", "red");
-
-
-
-	 	// svg.append("circle")
-	 	// .attr("r", 10)
-  	// 	.attr("cx", 50)
-  	// 	.attr("cy", 50)
-  	// 	.style("fill", "red");
 	 </script>
 </body>
 </html>
