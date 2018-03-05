@@ -95,15 +95,15 @@
 		d3.select('#legend')
 		.append('circle')
 		.attr('cx', 0)
-		.attr('cy', index * 10)
-		.attr('r', 3)
+		.attr('cy', index * 23)
+		.attr('r', 8)
 		.style('fill', colors[color])
 
 		d3.select('#legend')
 		.append('text')
 		.text(color)
-		.attr('x', 8)
-		.attr('y', index * 10 + 4)
+		.attr('x', 15)
+		.attr('y', index * 23 + 4)
 	});
 
 	/*********/

@@ -28,5 +28,7 @@ body {
 }
 
 #legend {
-  display: none;
+  /*display: none;*/
+  font-family: 'Lato';
+  font-size: 14px;
 }
